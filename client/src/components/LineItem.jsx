@@ -2,14 +2,15 @@ import React from "react";
 import "./LineItem.css";
 
 export default function LineItem({ item }) {
+  const ESTIMATED_DELIVERY = "Dec 2 - Dec 15";
   return (
     <div className="container">
       <div className="child">
         <img src={item.image} alt={item.title} />
       </div>
-      <div className="child line-item__description">
+      <div className="child">
         <div className="item-title">
-          {item.swatchTitle.toUpperCase()} / {item.title} / {item.id}
+          {item.swatchTitle.toUpperCase()} / {item.title} / {item.quantity}
         </div>
         <div className="item-swatch">
           <div
@@ -19,8 +20,10 @@ export default function LineItem({ item }) {
           <div>{item.swatchTitle}</div>
         </div>
       </div>
-      <div className="child line-item__details">
-        ${item.price * item.quantity}
+      <div className="child item-details">
+        <div>${item.price * item.quantity}</div>
+        <div>Estimated Delivery Date {ESTIMATED_DELIVERY}</div>
+        <button>Remove</button>
       </div>
     </div>
   );

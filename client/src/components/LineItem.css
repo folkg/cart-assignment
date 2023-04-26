@@ -1,5 +1,5 @@
 .container {
-  width: 100%;
+  max-width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -28,6 +28,14 @@ img {
 .item-swatch {
   display: flex;
   align-items: center;
+}
+
+.item-details {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-left: 1rem;
 }
 
 .swatch {
