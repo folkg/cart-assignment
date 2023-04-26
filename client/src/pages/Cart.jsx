@@ -26,7 +26,11 @@ export default function Cart({
       <h1>Your Cart</h1>
       {lineItems.map((item) => (
         <div className="line-item" key={item.id}>
-          <LineItem item={item} removeLineItemFn={removeLineItemFn} />
+          <LineItem
+            item={item}
+            removeLineItemFn={removeLineItemFn}
+            postalCode={postalCode}
+          />
         </div>
       ))}
       <CartFees fees={calculateFees()} />

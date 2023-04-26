@@ -1,8 +1,17 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./LineItem.css";
 
-export default function LineItem({ item, removeLineItemFn }) {
-  const ESTIMATED_DELIVERY = "Dec 2 - Dec 15";
+export default function LineItem({ item, removeLineItemFn, postalCode }) {
+  const [deliveryDate, setDeliveryDate] = useState("TBD");
+  useEffect(() => {
+    fetch(
+      `http://localhost:4000/api/delivery?postalCode=${postalCode}&lineItemId=${item.id}`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        setDeliveryDate(data);
+      });
+  }, [postalCode]);
   function handleClick() {
     removeLineItemFn(item.id);
   }
@@ -25,7 +34,7 @@ export default function LineItem({ item, removeLineItemFn }) {
       </div>
       <div className="child item-details">
         <div>${item.price * item.quantity}</div>
-        <div>Estimated Delivery Date {ESTIMATED_DELIVERY}</div>
+        <div>Estimated Delivery Date {deliveryDate}</div>
         <button onClick={handleClick}>Remove</button>
       </div>
     </div>

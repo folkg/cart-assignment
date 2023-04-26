@@ -3,11 +3,6 @@ import Cart from "./pages/Cart";
 import React, { useEffect, useState } from "react";
 
 function App() {
-  //Styling variables
-  const BLUE = "#172162"; //"rgb(23, 33, 98)";
-  const LIGHT_GREY = "#6e7484";
-  const BLACK = "#000000";
-
   //First part given
   const [postalCode, setPostalCode] = useState("A1A1A1");
   const [lineItems, setLineItems] = useState([]);
@@ -65,7 +60,6 @@ function App() {
     newItem.id = Math.random() * 1000; // I know this is not a good way to generate unique ids, but quick and dirty
     setLineItems((lineItems) => [...lineItems, newItem]);
   };
-  const ESTIMATED_DELIVERY = "Nov 24, 2021";
 
   return (
     <>

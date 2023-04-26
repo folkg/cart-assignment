@@ -33,18 +33,14 @@ const DELIVERY_DATES = [
 router.get("/", (req, res) => {
   // will return the first found delivery date if multiple item ids match
   const postalCode = req.query.postalCode;
-  const lineItemIds = req.query.lineItemIds
-    ?.split(",")
-    .map((id) => parseInt(id));
+  const lineItemId = req.query.lineItemId;
   const deliveryDate = DELIVERY_DATES.find((deliveryDate) => {
     return (
       deliveryDate.postal === postalCode?.[0] &&
-      deliveryDate.ids.find((id) => lineItemIds?.includes(id))
+      deliveryDate.ids.includes(parseInt(lineItemId))
     );
   });
-  res.json(
-    deliveryDate?.estimatedDeliveryDate || { estimatedDeliveryDate: "N/A" }
-  );
+  res.json(deliveryDate?.estimatedDeliveryDate || "TBD");
 });
 
 export default router;
