@@ -1,4 +1,5 @@
 import "./App.css";
+import Cart from "./pages/Cart";
 
 function App() {
   //Styling variables
@@ -46,7 +47,7 @@ function App() {
   const HST = 272.3461;
   const TOTAL = 2382.3161;
   const ESTIMATED_DELIVERY = "Nov 24, 2021";
-  return <h1>Hello World</h1>;
+  return <Cart />;
 }
 
 export default App;
