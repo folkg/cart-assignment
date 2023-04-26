@@ -1,5 +1,6 @@
 import React from "react";
 import "./Cart.css";
+import LineItem from "../components/LineItem";
 
 export default function Cart({ lineItems }) {
   return (
@@ -7,7 +8,7 @@ export default function Cart({ lineItems }) {
       <h1>Your Cart</h1>
       {lineItems.map((item) => (
         <div className="line-item" key={item.id}>
-          {item.title}
+          <LineItem item={item} />
         </div>
       ))}
     </div>

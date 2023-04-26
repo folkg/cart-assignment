@@ -1,5 +1,5 @@
 import React from "react";
 
-export default function LineItem() {
-  return <div>LineItem</div>;
+export default function LineItem({ item }) {
+  return <div>{item.title}</div>;
 }
