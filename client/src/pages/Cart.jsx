@@ -1,6 +1,7 @@
 import React from "react";
 import "./Cart.css";
 import LineItem from "../components/LineItem";
+import CartFees from "../components/CartFees";
 
 export default function Cart({ lineItems }) {
   return (
@@ -11,6 +12,7 @@ export default function Cart({ lineItems }) {
           <LineItem item={item} />
         </div>
       ))}
+      <CartFees lineItems={lineItems} />
     </div>
   );
 }

@@ -1,0 +1,10 @@
+.line {
+  display: flex;
+  justify-content: space-between;
+  margin: 0.5rem 0;
+}
+
+.total {
+  font-weight: bold;
+  color: #172162;
+}
