@@ -1,8 +1,12 @@
 import React from "react";
 import "./LineItem.css";
 
-export default function LineItem({ item }) {
+export default function LineItem({ item, removeLineItemFn }) {
   const ESTIMATED_DELIVERY = "Dec 2 - Dec 15";
+  function handleClick() {
+    console.log("clicked");
+    removeLineItemFn(item.id);
+  }
   return (
     <div className="container">
       <div className="child">
@@ -23,7 +27,7 @@ export default function LineItem({ item }) {
       <div className="child item-details">
         <div>${item.price * item.quantity}</div>
         <div>Estimated Delivery Date {ESTIMATED_DELIVERY}</div>
-        <button>Remove</button>
+        <button onClick={handleClick}>Remove</button>
       </div>
     </div>
   );

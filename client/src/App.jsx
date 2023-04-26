@@ -44,12 +44,16 @@ function App() {
     },
   ];
   const [lineItems, setLineItems] = useState(lineItemsDefault);
+  const removeLineItem = (id) => {
+    console.log("removeLineItem", id);
+    setLineItems((lineItems) => lineItems.filter((item) => item.id !== id));
+  };
 
   const SUBTOTAL = 2094.97;
   const HST = 272.3461;
   const TOTAL = 2382.3161;
   const ESTIMATED_DELIVERY = "Nov 24, 2021";
-  return <Cart lineItems={lineItems} />;
+  return <Cart lineItems={lineItems} removeLineItemFn={removeLineItem} />;
 }
 
 export default App;
