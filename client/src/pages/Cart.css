@@ -1,3 +1,12 @@
 h1 {
   color: #172162;
 }
+
+.postal-code {
+  display: flex;
+  margin-top: 2rem;
+}
+
+.cart-container {
+  margin-bottom: 2rem;
+}

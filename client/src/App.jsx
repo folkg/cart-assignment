@@ -69,7 +69,7 @@ function App() {
         postalCode={postalCode}
         setPostalCode={setPostalCode}
       />
-      <button onClick={addLineItem}>Add Item to Cart</button>
+      <button onClick={addLineItem}>Add Random Item to Cart</button>
     </>
   );
 }

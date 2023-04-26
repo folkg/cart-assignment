@@ -22,7 +22,7 @@ export default function Cart({
     return { subtotal, tax, shipping, total };
   };
   return (
-    <div>
+    <div className="cart-container">
       <h1>Your Cart</h1>
       {lineItems.map((item) => (
         <div className="line-item" key={item.id}>
@@ -34,12 +34,14 @@ export default function Cart({
         </div>
       ))}
       <CartFees fees={calculateFees()} />
-      <div>Postal Code</div>
-      <input
-        type="text"
-        value={postalCode}
-        onChange={(e) => setPostalCode(e.target.value)}
-      />
+      <div className="postal-code">
+        <div>Postal Code</div>
+        <input
+          type="text"
+          value={postalCode}
+          onChange={(e) => setPostalCode(e.target.value)}
+        />
+      </div>
     </div>
   );
 }
