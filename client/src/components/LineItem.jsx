@@ -4,7 +4,6 @@ import "./LineItem.css";
 export default function LineItem({ item, removeLineItemFn }) {
   const ESTIMATED_DELIVERY = "Dec 2 - Dec 15";
   function handleClick() {
-    console.log("clicked");
     removeLineItemFn(item.id);
   }
   return (
