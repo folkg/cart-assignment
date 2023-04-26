@@ -47,7 +47,7 @@ function App() {
   const HST = 272.3461;
   const TOTAL = 2382.3161;
   const ESTIMATED_DELIVERY = "Nov 24, 2021";
-  return <Cart />;
+  return <Cart lineItems={lineItems} />;
 }
 
 export default App;
