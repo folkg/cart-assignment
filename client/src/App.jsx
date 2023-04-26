@@ -1,5 +1,6 @@
 import "./App.css";
 import Cart from "./pages/Cart";
+import React, { useState } from "react";
 
 function App() {
   //Styling variables
@@ -8,7 +9,7 @@ function App() {
   const BLACK = "#000000";
 
   //First part given
-  const lineItems = [
+  const lineItemsDefault = [
     {
       id: 1,
       title: "Grey Sofa",
@@ -42,6 +43,7 @@ function App() {
       swatchTitle: "White",
     },
   ];
+  const [lineItems, setLineItems] = useState(lineItemsDefault);
 
   const SUBTOTAL = 2094.97;
   const HST = 272.3461;
