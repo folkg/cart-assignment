@@ -3,7 +3,12 @@ import "./Cart.css";
 import LineItem from "../components/LineItem";
 import CartFees from "../components/CartFees";
 
-export default function Cart({ lineItems, removeLineItemFn }) {
+export default function Cart({
+  lineItems,
+  removeLineItemFn,
+  postalCode,
+  setPostalCode,
+}) {
   const SHIPPING = 15;
   const calculateFees = () => {
     // Assume that shipping is not taxed
@@ -25,6 +30,12 @@ export default function Cart({ lineItems, removeLineItemFn }) {
         </div>
       ))}
       <CartFees fees={calculateFees()} />
+      <div>Postal Code</div>
+      <input
+        type="text"
+        value={postalCode}
+        onChange={(e) => setPostalCode(e.target.value)}
+      />
     </div>
   );
 }

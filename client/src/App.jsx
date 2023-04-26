@@ -9,8 +9,8 @@ function App() {
   const BLACK = "#000000";
 
   //First part given
+  const [postalCode, setPostalCode] = useState("A1A1A1");
   const [lineItems, setLineItems] = useState([]);
-
   useEffect(() => {
     fetch("http://localhost:4000/api/item")
       .then((res) => res.json())
@@ -69,7 +69,12 @@ function App() {
 
   return (
     <>
-      <Cart lineItems={lineItems} removeLineItemFn={removeLineItem} />
+      <Cart
+        lineItems={lineItems}
+        removeLineItemFn={removeLineItem}
+        postalCode={postalCode}
+        setPostalCode={setPostalCode}
+      />
       <button onClick={addLineItem}>Add Item to Cart</button>
     </>
   );
