@@ -1,6 +1,6 @@
 import "./App.css";
 import Cart from "./pages/Cart";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 function App() {
   //Styling variables
@@ -9,7 +9,21 @@ function App() {
   const BLACK = "#000000";
 
   //First part given
-  const lineItemsDefault = [
+  const [lineItems, setLineItems] = useState([]);
+
+  useEffect(() => {
+    fetch("http://localhost:4000/api/item")
+      .then((res) => res.json())
+      .then((data) => {
+        setLineItems(data);
+      });
+  }, []);
+
+  const removeLineItem = (id) => {
+    setLineItems((lineItems) => lineItems.filter((item) => item.id !== id));
+  };
+
+  const sampleLineItems = [
     {
       id: 1,
       title: "Grey Sofa",
@@ -43,23 +57,16 @@ function App() {
       swatchTitle: "White",
     },
   ];
-  const [lineItems, setLineItems] = useState(lineItemsDefault);
-  const removeLineItem = (id) => {
-    setLineItems((lineItems) => lineItems.filter((item) => item.id !== id));
-  };
   const addLineItem = () => {
     // I was a little confused by the instructions here
     // I chose to add a random item from the default list
     const newItem =
-      lineItemsDefault[Math.floor(Math.random() * lineItemsDefault.length)];
+      sampleLineItems[Math.floor(Math.random() * sampleLineItems.length)];
     newItem.id = Math.random() * 1000; // I know this is not a good way to generate unique ids, but quick and dirty
     setLineItems((lineItems) => [...lineItems, newItem]);
   };
-
-  const SUBTOTAL = 2094.97;
-  const HST = 272.3461;
-  const TOTAL = 2382.3161;
   const ESTIMATED_DELIVERY = "Nov 24, 2021";
+
   return (
     <>
       <Cart lineItems={lineItems} removeLineItemFn={removeLineItem} />
