@@ -1,15 +1,15 @@
-use axum::{response::Html, routing::get, Router};
+use axum::{routing::get, Router};
 
 #[tokio::main]
 async fn main() {
-    let app = Router::new().route("/", get(handler));
+    let app = Router::new()
+        .route("/api/item", get(|| async { "Item works" }))
+        .route("/api/delivery", get(|| async { "Delivery works" }));
 
-    axum::Server::bind(&"127.0.0.1:4001".parse().unwrap())
+    let addr = std::net::SocketAddr::from(([127, 0, 0, 1], 4001));
+    println!("Server running on http://{}", addr);
+    axum::Server::bind(&addr)
         .serve(app.into_make_service())
         .await
-        .expect("server should not fail.")
-}
-
-async fn handler() -> Html<&'static str> {
-    Html("<h1>Hello, World!</h1>")
+        .expect("server should not fail.");
 }
