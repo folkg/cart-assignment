@@ -1,10 +1,12 @@
 use axum::{routing::get, Router};
 
+mod handlers;
+
 #[tokio::main]
 async fn main() {
     let app = Router::new()
-        .route("/api/item", get(|| async { "Item works" }))
-        .route("/api/delivery", get(|| async { "Delivery works" }));
+        .route("/api/item", get(handlers::item_handler))
+        .route("/api/delivery", get(handlers::delivery_handler));
 
     let addr = std::net::SocketAddr::from(([127, 0, 0, 1], 4001));
     println!("Server running on http://{}", addr);
