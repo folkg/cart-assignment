@@ -8,8 +8,11 @@ async fn main() {
     let cors = CorsLayer::new().allow_origin(Any);
 
     let app = Router::new()
-        .route("/api/item", get(handlers::item_handler))
-        .route("/api/delivery", get(handlers::delivery_handler))
+        .route("/api/item", get(handlers::item_handler::item_handler))
+        .route(
+            "/api/delivery",
+            get(handlers::delivery_handler::delivery_handler),
+        )
         .layer(cors);
 
     let addr = std::net::SocketAddr::from(([127, 0, 0, 1], 4000));
