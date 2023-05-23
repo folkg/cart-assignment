@@ -37,17 +37,8 @@ pub async fn delivery_handler(params: Query<DeliveryQueryParams>) -> Json<impl S
         ..
     } = params.0;
 
-    let line_item_id: usize = match line_item_id.parse() {
-        Ok(line_item_id) => line_item_id,
-        Err(_) => 0,
-    };
-    let postal_code_first_letter = if let Some(letter) = postal_code.chars().next() {
-        letter.to_string()
-    } else {
-        "".to_string()
-    };
-
-    println!("{} {}", postal_code, line_item_id);
+    let line_item_id: usize = line_item_id.parse().unwrap_or_default();
+    let postal_code_first_letter = postal_code.chars().next().unwrap_or_default().to_string();
 
     // TODO: Better error handling to send back status 500 or something instead of panicing
     let data =
