@@ -11,6 +11,7 @@ pub async fn item_handler() -> Json<Value> {
     Json(items)
 }
 
+// TODO: Extract the delivery date stuff to a new module
 #[derive(Deserialize)]
 pub struct DeliveryQueryParams {
     #[serde(rename = "postalCode")]
@@ -22,22 +23,31 @@ pub struct DeliveryQueryParams {
 
 #[derive(Deserialize, Serialize)]
 pub struct DeliveryDate {
-    #[serde(rename = "postal")]
-    postal_code: String,
-
-    #[serde(rename = "ids")]
-    item_ids: Vec<usize>,
+    postal: String,
+    ids: Vec<usize>,
 
     #[serde(rename = "estimatedDeliveryDate")]
     estimated_delivery_date: String,
 }
 
-pub async fn delivery_handler(params: Query<DeliveryQueryParams>) -> Json<Vec<DeliveryDate>> {
+pub async fn delivery_handler(params: Query<DeliveryQueryParams>) -> Json<impl Serialize> {
     let DeliveryQueryParams {
         postal_code,
         line_item_id,
         ..
     } = params.0;
+
+    let line_item_id: usize = match line_item_id.parse() {
+        Ok(line_item_id) => line_item_id,
+        Err(_) => 0,
+    };
+    let postal_code_first_letter = if let Some(letter) = postal_code.chars().next() {
+        letter.to_string()
+    } else {
+        "".to_string()
+    };
+
+    println!("{} {}", postal_code, line_item_id);
 
     // TODO: Better error handling to send back status 500 or something instead of panicing
     let data =
@@ -45,6 +55,13 @@ pub async fn delivery_handler(params: Query<DeliveryQueryParams>) -> Json<Vec<De
     let delivery_dates: Vec<DeliveryDate> =
         serde_json::from_str(&data).expect("Should have the correct JSON format.");
 
-    println!("{} {}", postal_code, line_item_id);
-    Json(delivery_dates)
+    let result = delivery_dates
+        .iter()
+        .find(|date| date.postal == postal_code_first_letter && date.ids.contains(&line_item_id));
+
+    if let Some(date) = result {
+        return Json(date.estimated_delivery_date.clone());
+    } else {
+        return Json("TBD".to_string());
+    }
 }
