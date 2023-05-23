@@ -54,3 +54,107 @@ pub async fn delivery_handler(
         return Ok(Json("TBD".to_string()));
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use axum::{body::Body, http::Request};
+    use serde_json::{json, Value};
+
+    use tower::ServiceExt; // for `oneshot` and `ready`
+
+    #[tokio::test]
+    async fn test_delivery_handler_success_1() {
+        let app = super::super::super::app();
+
+        let req = Request::builder()
+            .uri("/api/delivery?postalCode=M2R0N7&lineItemId=1")
+            .body(Body::empty())
+            .unwrap();
+        let response = app.oneshot(req).await.unwrap();
+
+        assert_eq!(response.status(), 200);
+
+        let body = hyper::body::to_bytes(response.into_body()).await.unwrap();
+        let body: Value = serde_json::from_slice(&body).unwrap();
+        let expected_body = json!("Dec 19, 2021");
+
+        assert_eq!(body, expected_body);
+    }
+
+    #[tokio::test]
+    async fn test_delivery_handler_success_2() {
+        let app = super::super::super::app();
+
+        let req = Request::builder()
+            .uri("/api/delivery?postalCode=K2R0N7&lineItemId=3")
+            .body(Body::empty())
+            .unwrap();
+        let response = app.oneshot(req).await.unwrap();
+
+        assert_eq!(response.status(), 200);
+
+        let body = hyper::body::to_bytes(response.into_body()).await.unwrap();
+        let body: Value = serde_json::from_slice(&body).unwrap();
+        let expected_body = json!("Dec 24, 2021");
+
+        assert_eq!(body, expected_body);
+    }
+
+    #[tokio::test]
+    async fn test_delivery_handler_success_tba() {
+        let app = super::super::super::app();
+
+        let req = Request::builder()
+            .uri("/api/delivery?postalCode=A&lineItemId=4")
+            .body(Body::empty())
+            .unwrap();
+        let response = app.oneshot(req).await.unwrap();
+
+        assert_eq!(response.status(), 200);
+
+        let body = hyper::body::to_bytes(response.into_body()).await.unwrap();
+        let body: Value = serde_json::from_slice(&body).unwrap();
+        let expected_body = json!("TBD");
+
+        assert_eq!(body, expected_body);
+    }
+
+    #[tokio::test]
+    async fn test_delivery_handler_missing_postal_code() {
+        let app = super::super::super::app();
+
+        let req = Request::builder()
+            .uri("/api/delivery?lineItemId=3")
+            .body(Body::empty())
+            .unwrap();
+        let response = app.oneshot(req).await.unwrap();
+
+        assert_eq!(response.status(), 400);
+    }
+
+    #[tokio::test]
+    async fn test_delivery_handler_missing_line_item_id() {
+        let app = super::super::super::app();
+
+        let req = Request::builder()
+            .uri("/api/delivery?postalCode=K2R0N7")
+            .body(Body::empty())
+            .unwrap();
+        let response = app.oneshot(req).await.unwrap();
+
+        assert_eq!(response.status(), 400);
+    }
+
+    #[tokio::test]
+    async fn test_delivery_handler_incorrect_uri() {
+        let app = super::super::super::app();
+
+        let req = Request::builder()
+            .uri("/delivery")
+            .body(Body::empty())
+            .unwrap();
+        let response = app.oneshot(req).await.unwrap();
+
+        assert_eq!(response.status(), 404);
+    }
+}
