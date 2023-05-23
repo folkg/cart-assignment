@@ -1,14 +1,22 @@
 use std::fs;
 
-use axum::{extract::Query, Json};
+use axum::{extract::Query, http::StatusCode, Json};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
-pub async fn item_handler() -> Json<Value> {
-    // TODO: Better error handling to send back status 500 or something instead of panicing
-    let data = fs::read_to_string("json/line_items.json").expect("Should be able to read file.");
-    let items = serde_json::from_str(&data).expect("Should have the correct JSON format.");
-    Json(items)
+pub async fn item_handler() -> Result<Json<Value>, (StatusCode, String)> {
+    let data = fs::read_to_string("json/line_items.json").map_err(|e| {
+        let error_message = format!("Failed to read file: {}", e);
+        eprintln!("{}", error_message);
+        (StatusCode::INTERNAL_SERVER_ERROR, error_message)
+    })?;
+    let items = serde_json::from_str(&data).map_err(|e| {
+        let error_message = format!("Failed to parse JSON file: {}", e);
+        eprintln!("{}", error_message);
+        (StatusCode::INTERNAL_SERVER_ERROR, error_message)
+    })?;
+
+    Ok(Json(items))
 }
 
 // TODO: Extract the delivery date stuff to a new module
@@ -30,7 +38,9 @@ pub struct DeliveryDate {
     estimated_delivery_date: String,
 }
 
-pub async fn delivery_handler(params: Query<DeliveryQueryParams>) -> Json<impl Serialize> {
+pub async fn delivery_handler(
+    params: Query<DeliveryQueryParams>,
+) -> Result<Json<impl Serialize>, (StatusCode, String)> {
     let DeliveryQueryParams {
         postal_code,
         line_item_id,
@@ -40,19 +50,24 @@ pub async fn delivery_handler(params: Query<DeliveryQueryParams>) -> Json<impl S
     let line_item_id: usize = line_item_id.parse().unwrap_or_default();
     let postal_code_first_letter = postal_code.chars().next().unwrap_or_default().to_string();
 
-    // TODO: Better error handling to send back status 500 or something instead of panicing
-    let data =
-        fs::read_to_string("json/delivery_dates.json").expect("Should be able to read file.");
-    let delivery_dates: Vec<DeliveryDate> =
-        serde_json::from_str(&data).expect("Should have the correct JSON format.");
+    let data = fs::read_to_string("json/delivery_dates.json").map_err(|e| {
+        let error_message = format!("Failed to read file: {}", e);
+        eprintln!("{}", error_message);
+        (StatusCode::INTERNAL_SERVER_ERROR, error_message)
+    })?;
+    let delivery_dates: Vec<DeliveryDate> = serde_json::from_str(&data).map_err(|e| {
+        let error_message = format!("Failed to parse JSON file: {}", e);
+        eprintln!("{}", error_message);
+        (StatusCode::INTERNAL_SERVER_ERROR, error_message)
+    })?;
 
     let result = delivery_dates
         .iter()
         .find(|date| date.postal == postal_code_first_letter && date.ids.contains(&line_item_id));
 
     if let Some(date) = result {
-        return Json(date.estimated_delivery_date.clone());
+        return Ok(Json(date.estimated_delivery_date.clone()));
     } else {
-        return Json("TBD".to_string());
+        return Ok(Json("TBD".to_string()));
     }
 }
